@@ -1,10 +1,12 @@
 import en from "./en.json";
+import fa from "./fa.json";
+import ru from "./ru.json";
 
-export type Locale = "en";
+export type Locale = "en" | "fa" | "ru";
 export type NestedDict = { [key: string]: string | NestedDict };
 export type Dict = typeof en;
 
-const dicts: Record<Locale, Dict> = { en };
+const dicts: Record<Locale, Dict> = { en, fa, ru };
 let currentLocale: Locale = "en";
 
 export function setLocale(locale: Locale) {

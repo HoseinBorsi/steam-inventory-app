@@ -1,0 +1,45 @@
+{
+  "app": {
+    "title": "Инвентарь Steam",
+    "loading": "Загрузка...",
+    "error": "Что-то пошло не так"
+  },
+  "home": {
+    "title": "Инвентарь Steam",
+    "subtitle": "Просматривайте игры и предметы инвентаря Steam",
+    "description": "По категориям · Быстрый поиск · Красивый интерфейс",
+    "login": "Войти через Steam",
+    "enter": "Перейти к инвентарю",
+    "features": {
+      "games": { "title": "Игры", "desc": "Все ваши игры Steam в одном месте" },
+      "search": { "title": "Поиск", "desc": "Быстрый поиск по всем предметам" },
+      "stats": { "title": "Статистика", "desc": "Подробная статистика времени игры" }
+    },
+    "notLoggedIn": "Не выполнен вход"
+  },
+  "nav": {
+    "logout": "Выйти"
+  },
+  "inventory": {
+    "title": "Библиотека игр",
+    "gamesCount": "{count} игр",
+    "itemsCount": "{count} предметов",
+    "noGames": "Игры не найдены",
+    "noItems": "Предметы не найдены или инвентарь скрыт",
+    "noItemsSearch": "Нет предметов по вашему запросу",
+    "noGamesSearch": "Нет игр по вашему запросу",
+    "gamesShown": "Показано {count} игр",
+    "backToGames": "Назад к играм",
+    "searchGames": "Поиск игр...",
+    "searchItems": "Поиск предметов...",
+    "sortMostPlayed": "По времени",
+    "sortAZ": "А-Я",
+    "filterPlayed": "Только сыгранные"
+  },
+  "errors": {
+    "steamIdRequired": "Требуются Steam ID и App ID",
+    "fetchFailed": "Не удалось загрузить инвентарь",
+    "notFound": "Не найдено",
+    "unauthorized": "Не авторизован"
+  }
+}
