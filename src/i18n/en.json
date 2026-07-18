@@ -1,0 +1,45 @@
+{
+  "app": {
+    "title": "Steam Inventory",
+    "loading": "Loading...",
+    "error": "Something went wrong"
+  },
+  "home": {
+    "title": "Steam Inventory",
+    "subtitle": "Browse your Steam games and inventory items",
+    "description": "Categorized · Fast search · Beautiful interface",
+    "login": "Sign in with Steam",
+    "enter": "Go to Inventory",
+    "features": {
+      "games": { "title": "Games", "desc": "All your Steam games in one place" },
+      "search": { "title": "Search", "desc": "Fast search across all items" },
+      "stats": { "title": "Statistics", "desc": "Detailed playtime stats" }
+    },
+    "notLoggedIn": "Not signed in"
+  },
+  "nav": {
+    "logout": "Sign Out"
+  },
+  "inventory": {
+    "title": "Game Library",
+    "gamesCount": "{count} games owned",
+    "itemsCount": "{count} items",
+    "noGames": "No games found",
+    "noItems": "No items found or inventory is private",
+    "noItemsSearch": "No items matching your search",
+    "noGamesSearch": "No games match your search",
+    "gamesShown": "{count} games shown",
+    "backToGames": "Back to Games",
+    "searchGames": "Search games...",
+    "searchItems": "Search items...",
+    "sortMostPlayed": "Most Played",
+    "sortAZ": "A-Z",
+    "filterPlayed": "Played Only"
+  },
+  "errors": {
+    "steamIdRequired": "Steam ID and App ID required",
+    "fetchFailed": "Failed to fetch inventory",
+    "notFound": "Not found",
+    "unauthorized": "Unauthorized"
+  }
+}
