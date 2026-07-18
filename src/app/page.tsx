@@ -4,9 +4,10 @@ import Navbar from "@/components/Navbar";
 import { getSteamLoginUrl } from "@/lib/steam";
 import { Button } from "@/components/ui/button";
 import { Gamepad2, Search, BarChart3, ArrowRight, Shield } from "lucide-react";
-import { t } from "@/i18n";
+import { LocaleProvider, useLocale } from "@/i18n";
 
-export default function Home() {
+function HomeContent() {
+  const { t } = useLocale();
   const [user, setUser] = useState<{ steamId: string; name: string; avatar: string } | null>(null);
 
   useEffect(() => {
@@ -62,5 +63,13 @@ export default function Home() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <LocaleProvider>
+      <HomeContent />
+    </LocaleProvider>
   );
 }

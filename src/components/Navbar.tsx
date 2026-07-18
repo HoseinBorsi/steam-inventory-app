@@ -1,9 +1,19 @@
 "use client";
 import Link from "next/link";
-import { LogOut, Gamepad2, User } from "lucide-react";
-import { t } from "@/i18n";
+import { LogOut, Gamepad2, User, Globe } from "lucide-react";
+import { useLocale, type Locale } from "@/i18n";
+
+const labels: Record<Locale, string> = { en: "EN", fa: "فا", ru: "RU" };
+const locales: Locale[] = ["en", "fa", "ru"];
 
 export default function Navbar({ user }: { user?: { name: string; avatar: string } | null }) {
+  const { locale, setLocale, t } = useLocale();
+
+  const cycleLocale = () => {
+    const idx = locales.indexOf(locale);
+    setLocale(locales[(idx + 1) % locales.length]);
+  };
+
   const handleLogout = async () => {
     await fetch("/api/user", { method: "POST" });
     window.location.href = "/";
@@ -19,19 +29,30 @@ export default function Navbar({ user }: { user?: { name: string; avatar: string
           </span>
         </Link>
 
-        {user ? (
-          <div className="flex items-center gap-4">
-            <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
-            <span className="text-sm text-gray-300">{user.name}</span>
-            <button onClick={handleLogout} className="text-xs text-gray-500 hover:text-red-400 transition flex items-center gap-1">
-              <LogOut className="w-3 h-3" /> {t("nav.logout")}
-            </button>
-          </div>
-        ) : (
-          <div className="text-sm text-gray-500 flex items-center gap-1">
-            <User className="w-3 h-3" /> {t("home.notLoggedIn")}
-          </div>
-        )}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={cycleLocale}
+            className="flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-gray-400 hover:text-white hover:bg-slate-800 transition"
+            title={locale}
+          >
+            <Globe className="w-3.5 h-3.5" />
+            {labels[locale]}
+          </button>
+
+          {user ? (
+            <div className="flex items-center gap-3">
+              <img src={user.avatar} alt="" className="w-8 h-8 rounded-full" />
+              <span className="text-sm text-gray-300 hidden sm:inline">{user.name}</span>
+              <button onClick={handleLogout} className="text-xs text-gray-500 hover:text-red-400 transition flex items-center gap-1">
+                <LogOut className="w-3 h-3" /> {t("nav.logout")}
+              </button>
+            </div>
+          ) : (
+            <div className="text-sm text-gray-500 flex items-center gap-1">
+              <User className="w-3 h-3" /> {t("home.notLoggedIn")}
+            </div>
+          )}
+        </div>
       </div>
     </nav>
   );

@@ -34,7 +34,23 @@
     "searchItems": "Search items...",
     "sortMostPlayed": "Most Played",
     "sortAZ": "A-Z",
-    "filterPlayed": "Played Only"
+    "filterPlayed": "Played Only",
+    "display": {
+      "grid": "Grid",
+      "list": "List",
+      "compact": "Compact"
+    },
+    "filter": {
+      "tradable": "Tradable",
+      "marketable": "Marketable",
+      "all": "All"
+    },
+    "sort": {
+      "name": "Name",
+      "quantity": "Quantity",
+      "rarity": "Rarity"
+    },
+    "aggregate": "Grouped"
   },
   "errors": {
     "steamIdRequired": "Steam ID and App ID required",

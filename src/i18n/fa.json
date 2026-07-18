@@ -34,7 +34,23 @@
     "searchItems": "جستجوی آیتم‌ها...",
     "sortMostPlayed": "بیشترین بازی",
     "sortAZ": "الفبا",
-    "filterPlayed": "فقط بازی‌شده"
+    "filterPlayed": "فقط بازی‌شده",
+    "display": {
+      "grid": "شبکه‌ای",
+      "list": "لیستی",
+      "compact": "فشرده"
+    },
+    "filter": {
+      "tradable": "قابل ترد",
+      "marketable": "قابل فروش",
+      "all": "همه"
+    },
+    "sort": {
+      "name": "اسم",
+      "quantity": "تعداد",
+      "rarity": "کمیابی"
+    },
+    "aggregate": "تجمیع"
   },
   "errors": {
     "steamIdRequired": "شناسه استیم و شناسه بازی لازم است",

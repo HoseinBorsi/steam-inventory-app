@@ -7,14 +7,15 @@ const COOKIE = "birthtime=0; mature_content=1";
 export async function GET(req: NextRequest) {
   const steamId = req.nextUrl.searchParams.get("steamId");
   const appid = req.nextUrl.searchParams.get("appid");
+  const page = req.nextUrl.searchParams.get("page") || "";
   const headers = { "Access-Control-Allow-Origin": "*" };
 
   if (!steamId || !appid)
-    return NextResponse.json({ items: [] }, { status: 400, headers });
+    return NextResponse.json({ items: [], total: 0 }, { status: 400, headers });
 
   try {
-    // Steam blocks requests without a cookie — even a dummy one works
-    const url = `https://steamcommunity.com/inventory/${steamId}/${appid}/2?l=english&count=2000`;
+    const qs = `l=english&count=1000${page ? `&start_assetid=${page}` : ""}`;
+    const url = `https://steamcommunity.com/inventory/${steamId}/${appid}/2?${qs}`;
     const res = await fetch(url, {
       headers: { "User-Agent": UA, Cookie: COOKIE },
       signal: AbortSignal.timeout(15000),
@@ -22,44 +23,49 @@ export async function GET(req: NextRequest) {
 
     if (!res.ok) {
       return NextResponse.json({
-        items: [],
+        items: [], total: 0,
         note: `Steam returned HTTP ${res.status}`,
       }, { headers });
     }
 
     const data = await res.json();
-
-    // success: 1 (number), not boolean
     if (!data || data.success !== 1) {
       return NextResponse.json({
-        items: [],
+        items: [], total: 0,
         note: data?.Error || "Inventory is private or empty.",
       }, { headers });
     }
 
-    // Build description lookup: classid_instanceid -> desc
-    const descMap: Record<string, { name?: string; icon_url?: string; type?: string }> = {};
-    const descriptions = data.descriptions || {};
-    for (const key of Object.keys(descriptions)) {
-      const d = descriptions[key];
+    const descMap: Record<string, Record<string, unknown>> = {};
+    for (const key of Object.keys(data.descriptions || {})) {
+      const d = data.descriptions[key];
       if (d?.classid) descMap[`${d.classid}_${d.instanceid}`] = d;
     }
 
     const assets = data.assets || [];
-    const items = assets.map((a: { classid: string; instanceid: string; amount: string }) => {
+    const items = assets.map((a: Record<string, string>) => {
       const key = `${a.classid}_${a.instanceid}`;
       const desc = descMap[key] || {};
+      const tags = (desc.tags as Array<{ category: string; localized_tag_name: string }>) || [];
       return {
-        name: desc.name || "Unknown Item",
+        name: (desc.name || desc.market_hash_name || "Unknown Item") as string,
         icon_url: desc.icon_url ? `${STEAM_CDN}/${desc.icon_url}/128x128f` : "",
-        type: desc.type || "Item",
+        type: (desc.type || "Item") as string,
         quantity: parseInt(a.amount, 10) || 1,
+        tradable: desc.tradable === 1,
+        marketable: desc.marketable === 1,
+        rarity: tags.find((t) => t.category === "Rarity")?.localized_tag_name || "",
       };
     });
 
-    return NextResponse.json({ items }, { headers });
+    return NextResponse.json({
+      items,
+      total: data.total_inventory_count || items.length,
+      more: data.more_items || 0,
+      lastAssetId: data.last_assetid || "",
+    }, { headers });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json({ items: [], note: msg }, { status: 500, headers });
+    return NextResponse.json({ items: [], total: 0, note: msg }, { status: 500, headers });
   }
 }

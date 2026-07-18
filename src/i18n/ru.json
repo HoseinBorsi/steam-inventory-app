@@ -34,7 +34,23 @@
     "searchItems": "Поиск предметов...",
     "sortMostPlayed": "По времени",
     "sortAZ": "А-Я",
-    "filterPlayed": "Только сыгранные"
+    "filterPlayed": "Только сыгранные",
+    "display": {
+      "grid": "Сетка",
+      "list": "Список",
+      "compact": "Компактно"
+    },
+    "filter": {
+      "tradable": "Обмен",
+      "marketable": "Продажа",
+      "all": "Все"
+    },
+    "sort": {
+      "name": "Имя",
+      "quantity": "Кол-во",
+      "rarity": "Редкость"
+    },
+    "aggregate": "Группировка"
   },
   "errors": {
     "steamIdRequired": "Требуются Steam ID и App ID",
