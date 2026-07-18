@@ -1,12 +1,13 @@
 # 🎮 Steam Inventory App
 
-A fast, bilingual web application to browse your Steam game library and inspect inventory items per game — no API key required for inventory browsing.
+A fast, multilingual PWA to browse your Steam game library and inspect inventory items per game. No API key required for inventory browsing.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-15-black?logo=nextdotjs" />
   <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript" />
   <img src="https://img.shields.io/badge/Tailwind-3-38bdf8?logo=tailwindcss" />
   <img src="https://img.shields.io/badge/i18n-EN_|_FA_|_RU-8b5cf6" />
+  <img src="https://img.shields.io/badge/PWA-ready-06b6d4" />
   <img src="https://img.shields.io/badge/license-MIT-green" />
 </p>
 
@@ -17,25 +18,31 @@ A fast, bilingual web application to browse your Steam game library and inspect 
 ## ✨ Features
 
 - **Steam OpenID login** — secure, no passwords stored
-- **Game library browser** — see all your owned games with playtime
-- **Inventory inspector** — click any game to view your items inside
-- **Search & sort** — filter by name, sort by playtime or A-Z
-- **Multilingual UI** — English, فارسی, Русский
-- **Responsive dark theme** — desktop & mobile
-- **No API key** needed for inventory — public Steam Community endpoint
+- **Game library browser** — all owned games with playtime stats
+- **Inventory inspector** — click any game to see its items
+- **3 display modes** — Grid / List / Compact toggle
+- **Smart filters** — All items, Tradable only, Marketable only
+- **Sort options** — by Name, Quantity, or Rarity
+- **Aggregate view** — group identical items with count badge (×5)
+- **Live language switch** — English, فارسی, Русский (persists across sessions)
+- **PWA installable** — works as a standalone app on Windows & Android
+- **Dark theme** — responsive, works on all screen sizes
+- **No API key** for inventory — public Steam Community endpoint
 
 ---
 
 ## 🏗️ How It Works
 
-| Feature | API Used | Auth |
-|---------|----------|------|
+| Feature | API / Method | Auth |
+|---------|-------------|------|
 | Login | Steam OpenID | — |
 | Player profile | `ISteamUser/GetPlayerSummaries` | API key |
 | Game library | `IPlayerService/GetOwnedGames` | API key |
-| **Inventory items** | `steamcommunity.com/inventory/{id}/{appid}/2` | Cookie |
+| **Inventory** | `steamcommunity.com/inventory/{id}/{appid}/2` | Cookie |
 
-The inventory endpoint returns `{ assets, descriptions, success: 1, total_inventory_count }`. Assets map to descriptions via the composite key `classid_instanceid`. A `Cookie: birthtime=0; mature_content=1` header bypasses Steam's bot detection (HTTP 403).
+The inventory endpoint returns `{ success: 1, assets[], descriptions{}, total_inventory_count, more_items, last_assetid }`. Items are mapped to their descriptions via `classid_instanceid` composite key. A `Cookie: birthtime=0; mature_content=1` header bypasses Steam's bot detection.
+
+Pagination is supported — when `more_items > 0`, the next request uses `start_assetid=last_assetid`.
 
 Item images are served from Steam's Akamai CDN:
 ```
@@ -70,7 +77,11 @@ NEXT_PUBLIC_HOST=http://localhost:3000
 npm run dev
 ```
 
-Open `http://localhost:3000`, log in with Steam, and start browsing.
+Open `http://localhost:3000` → Login with Steam → Browse inventory.
+
+### Install as App (PWA)
+
+Open the site in Chrome/Edge → click the install icon in the address bar → the app runs standalone with its own window.
 
 ---
 
@@ -80,32 +91,28 @@ Open `http://localhost:3000`, log in with Steam, and start browsing.
 src/
 ├── app/
 │   ├── api/
-│   │   ├── auth/callback/route.ts    # OpenID callback
-│   │   ├── games/route.ts            # Owned games (API key)
-│   │   ├── inventory/route.ts        # Inventory items (public)
-│   │   └── user/route.ts             # Session
-│   ├── inventory/page.tsx            # Main inventory UI
-│   ├── layout.tsx                    # Root layout
+│   │   ├── auth/callback/route.ts    # Steam OpenID callback
+│   │   ├── games/route.ts            # Owned games (requires API key)
+│   │   ├── inventory/route.ts        # Public inventory + pagination
+│   │   └── user/route.ts             # Session cookie
+│   ├── inventory/page.tsx            # Full inventory UI
+│   ├── layout.tsx                    # Root layout + PWA
 │   └── page.tsx                      # Login page
 ├── components/
-│   ├── GameCard.tsx
-│   ├── Navbar.tsx
-│   ├── SearchBar.tsx
-│   └── ui/                           # shadcn-style primitives
+│   ├── GameCard.tsx                  # Game card with header image
+│   ├── Navbar.tsx                    # Navbar + language switcher
+│   ├── SearchBar.tsx                 # Reusable search input
+│   └── ui/                           # shadcn-style Button
 ├── i18n/
-│   ├── en.json                       # English
-│   ├── fa.json                       # Persian (فارسی)
-│   ├── ru.json                       # Russian (Русский)
-│   └── index.ts                      # Translation engine
+│   ├── en.json / fa.json / ru.json   # Translation files
+│   └── index.tsx                     # React Context locale provider
 └── lib/
     └── steam.ts                      # Steam API helpers
+public/
+├── manifest.json                     # PWA manifest
+├── sw.js                             # Service worker (offline cache)
+└── icons/icon.svg                    # App icon
 ```
-
----
-
-## 🌍 Regions with Restricted Access
-
-If `steamcommunity.com` is blocked in your region, the app still works as long as your **deployment server** can reach Steam (inventory fetch is server-side, not client-side).
 
 ---
 
